@@ -41,9 +41,41 @@
  */
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const port = 3000
 const app = express();
 
 app.use(bodyParser.json());
+
+const todoList = [];
+
+app.get("/todos",(req,res)=>{
+    res.status(200).json(todoList);
+});
+
+app.post("/todos",(req,res)=>{
+  const title = req.body.title
+  const completed = req.body.completed
+  const description = req.body.description
+  
+  if(!title || !(completed == true || completed == false) || !description){
+    res.status(400).json({message:"Please enter a valida title, complete status and description"});
+    return;
+  }
+
+  const index = todoList.length + 1;
+  const newTodo = {
+    id: index,
+    title: title,
+    completed: completed,
+    description: description
+  }
+
+  todoList.push(newTodo)
+  res.status(201).json(newTodo)
+});
+
+app.listen(port,()=>{
+  console.log("port started on: ",port);
+});
 
 module.exports = app;
