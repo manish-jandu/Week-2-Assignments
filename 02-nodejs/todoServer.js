@@ -58,7 +58,7 @@ app.post("/todos",(req,res)=>{
   const description = req.body.description
   
   if(!title || !description){
-    res.status(400).json({message:"Please enter a valida title, complete status and description"});
+    res.status(400).send("Please enter a valida title, complete status and description");
     return;
   }
 
@@ -79,7 +79,7 @@ app.get("/todos/:id",(req,res)=>{
   const result = todoList[id-1]
   
   if(!result){
-    res.status(404).json({message:"Not able to find with this id"});
+    res.status(404).send("Not able to find with this id");
     return
   }
 
@@ -91,7 +91,7 @@ app.put("/todos/:id",(req,res)=>{
   const result = todoList[id-1]
   
   if(!result){
-    res.status(404).json({message:"Not able to find with this id"});
+    res.status(404).send("Not able to find with this id");
     return
   }
 
@@ -100,7 +100,7 @@ app.put("/todos/:id",(req,res)=>{
   const description = req.body.description
   
   if(!title || !description){
-    res.status(400).json({message:"Please enter a valida title, complete status and description"});
+    res.status(400).send("Please enter a valida title, complete status and description");
     return;
   }
  
@@ -121,7 +121,7 @@ app.delete("/todos/:id",(req,res)=>{
   const result = todoList[id-1]
   
   if(!result){
-    res.status(404).json({message:"Not able to find with this id"});
+    res.status(404).send("Not able to find with this id");
     return
   }
 
