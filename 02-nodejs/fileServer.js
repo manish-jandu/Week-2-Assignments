@@ -20,6 +20,42 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const app = express();
+const filePath = "./files"
+const port = 3001;
+
+
+app.get("/files",(req,res)=>{
+  fs.readdir(filePath,(err,files)=>{
+    if(err){
+      res.status(500).send("Something went wrong");
+      return;
+    }
+    res.status(200).json(files)
+  });
+});
+
+app.get("/file/:id",(req,res)=>{
+  const id = req.params.id;
+  if(!id){
+    res.status(400).send("Provide a valid id");
+  }
+
+  
+  fs.readFile(`${filePath}/${id}`,(err,content)=>{
+    if(err){
+      res.status(404).send("File not found");
+      return
+    }
+
+    res.status(200).send(content);
+  });
+  
+
+});
+
+app.use((req, res, next) => {
+  res.status(404).send("Route not found");
+});
 
 
 module.exports = app;
