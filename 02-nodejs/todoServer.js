@@ -57,7 +57,7 @@ app.post("/todos",(req,res)=>{
   const completed = req.body.completed
   const description = req.body.description
   
-  if(!title || !(completed == true || completed == false) || !description){
+  if(!title || !description){
     res.status(400).json({message:"Please enter a valida title, complete status and description"});
     return;
   }
@@ -66,7 +66,7 @@ app.post("/todos",(req,res)=>{
   const newTodo = {
     id: index,
     title: title,
-    completed: completed,
+    completed: false,
     description: description
   }
 
@@ -74,8 +74,67 @@ app.post("/todos",(req,res)=>{
   res.status(201).json(newTodo)
 });
 
-app.listen(port,()=>{
-  console.log("port started on: ",port);
+app.get("/todos/:id",(req,res)=>{
+  const id = req.params.id;
+  const result = todoList[id-1]
+  
+  if(!result){
+    res.status(404).json({message:"Not able to find with this id"});
+    return
+  }
+
+  res.status(200).json(result);
 });
+
+app.put("/todos/:id",(req,res)=>{
+  const id = req.params.id;
+  const result = todoList[id-1]
+  
+  if(!result){
+    res.status(404).json({message:"Not able to find with this id"});
+    return
+  }
+
+  const title = req.body.title
+  const completed = req.body.completed
+  const description = req.body.description
+  
+  if(!title || !description){
+    res.status(400).json({message:"Please enter a valida title, complete status and description"});
+    return;
+  }
+ 
+  const newTodo = {
+    id: id,
+    title: title,
+    completed: completed ? completed : false,
+    description: description
+  }
+
+  todoList[id-1] = newTodo;
+
+  res.status(200).json(newTodo);
+});
+
+app.delete("/todos/:id",(req,res)=>{
+  const id = req.params.id;
+  const result = todoList[id-1]
+  
+  if(!result){
+    res.status(404).json({message:"Not able to find with this id"});
+    return
+  }
+
+  todoList.splice(id-1,1);
+
+  res.status(200).json(result);
+});
+
+// for all other routes, return 404
+app.use((req, res, next) => {
+  res.status(404).send();
+});
+
+
 
 module.exports = app;
